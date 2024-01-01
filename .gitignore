@@ -78,3 +78,6 @@ docs/venv
 # docker stuff
 docker-db
 *.iml
+
+# Nix
+/result
