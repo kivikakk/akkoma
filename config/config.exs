@@ -277,8 +277,12 @@ config :pleroma, :markup,
   # XXX - unfortunately, inline images must be enabled by default right now, because
   # of custom emoji.  Issue #275 discusses defanging that somehow.
   allow_inline_images: true,
-  allow_headings: false,
-  allow_tables: false,
+
+  # XXX(ashe): configuring this in the database leads to akkoma failing to boot.
+  # I'm assuming the module references cause some kind of dependency cycle.
+  allow_headings: true,
+  allow_tables: true,
+
   allow_fonts: false,
   scrub_policy: [
     Pleroma.HTML.Scrubber.Default,
