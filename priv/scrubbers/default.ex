@@ -106,8 +106,8 @@ defmodule Pleroma.HTML.Scrubber.Default do
   if Pleroma.Config.get([:markup, :allow_tables]) do
     Meta.allow_tag_with_these_attributes(:table, [])
     Meta.allow_tag_with_these_attributes(:tbody, [])
-    Meta.allow_tag_with_these_attributes(:td, [])
-    Meta.allow_tag_with_these_attributes(:th, [])
+    Meta.allow_tag_with_these_attributes(:td, ["align"])
+    Meta.allow_tag_with_these_attributes(:th, ["align"])
     Meta.allow_tag_with_these_attributes(:thead, [])
     Meta.allow_tag_with_these_attributes(:tr, [])
   end
