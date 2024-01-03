@@ -144,7 +144,7 @@
             };
             markdown = beamPackages.buildMix rec {
               name = "markdown";
-              version = "0.1.2";
+              version = "0.1.4";
 
               src = ex-markdown.src;
 

@@ -10,6 +10,16 @@ defmodule Pleroma.Formatter do
   @link_regex ~r"((?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~%:/?#[\]@!\$&'\(\)\*\+,;=.]+)|[0-9a-z+\-\.]+:[0-9a-z$-_.+!*'(),]+"ui
   @markdown_characters_regex ~r/(`|\*|_|{|}|[|]|\(|\)|#|\+|-|\.|!)/
 
+  @default_markdown_options %Markdown.Renderer.Options{
+    strikethrough: true,
+    table: true,
+    tasklist: true,
+    superscript: true,
+    footnotes: true,
+    smart: true,
+    unsafe_: true,
+  }
+
   defp linkify_opts do
     Pleroma.Config.get(Pleroma.Formatter) ++
       [
@@ -125,7 +135,7 @@ defmodule Pleroma.Formatter do
   end
 
   def markdown_to_html(text, opts \\ %{}) do
-    Markdown.render(text, Markdown.HtmlRenderer, %Markdown.Renderer.Options{} |> Map.merge(opts))
+    Markdown.to_html(text, @default_markdown_options |> Map.merge(opts))
   end
 
   def html_escape({text, mentions, hashtags}, type) do
