@@ -14,7 +14,6 @@ defmodule Pleroma.Formatter do
     strikethrough: true,
     table: true,
     tasklist: true,
-    superscript: true,
     footnotes: true,
     smart: true,
     unsafe_: true,
