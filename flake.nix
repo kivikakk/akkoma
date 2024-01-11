@@ -23,7 +23,7 @@
     in rec {
       formatter = pkgs.alejandra;
 
-      packages.default = beamPackages.mixRelease rec {
+      packages.default = (beamPackages.mixRelease rec {
         pname = "lottia-akkoma";
         version = "3.10.4";
 
@@ -222,6 +222,8 @@
           # the package
           elixirPackage = beamPackages.elixir;
         };
+      }).overrideAttrs {
+        LC_ALL = "en_US.UTF-8";
       };
 
       nixosModules.default = {config, ...}: {
