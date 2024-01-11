@@ -100,7 +100,7 @@ defmodule Pleroma.Formatter do
   def linkify(text, options \\ []) do
     options = linkify_opts() ++ options
 
-    if options[:safe_mention] && Regex.named_captures(@safe_mention_regex, text) do
+    if options[:safe_mention] do
       %{"mentions" => mentions, "rest" => rest} = Regex.named_captures(@safe_mention_regex, text)
       acc = %{mentions: MapSet.new(), tags: MapSet.new()}
 

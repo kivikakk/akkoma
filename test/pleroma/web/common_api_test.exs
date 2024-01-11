@@ -376,6 +376,21 @@ defmodule Pleroma.Web.CommonAPITest do
     assert jafnhar.ap_id in activity.recipients
   end
 
+  test "with the safe_dm_mentions option set, failure to detect relevant mentions doesn't just send them anyway" do
+    har = insert(:user)
+    jafnhar = insert(:user)
+
+    clear_config([:instance, :safe_dm_mentions], true)
+
+    assert_raise MatchError, fn ->
+      CommonAPI.post(har, %{
+        status: "ummm @#{jafnhar.nickname}, how are you going",
+        visibility: "direct",
+        content_type: "text/markdown"
+      })
+    end
+  end
+
   test "it de-duplicates tags" do
     user = insert(:user)
     {:ok, activity} = CommonAPI.post(user, %{status: "#2hu #2HU"})
