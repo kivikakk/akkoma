@@ -135,9 +135,9 @@ defmodule Pleroma.Web.ActivityPub.ObjectValidators.ArticleNotePageValidatorTest 
       assert content =~ "@oops_not_a_mention"
 
       assert content =~
-               "<span class=\"mfm _mfm_jelly_\">mfm goes here</span> </p>aaa"
+               "<span class=\"mfm _mfm_jelly_\">mfm goes here</span></p>\n<h2>aaa</h2>"
 
-      assert content =~ "some text<br/>newline"
+      assert content =~ "some text<br/>\nnewline"
     end
 
     test "a misskey MFM status with a _misskey_content field should work and be linked", _ do

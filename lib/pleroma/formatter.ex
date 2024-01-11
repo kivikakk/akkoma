@@ -18,6 +18,7 @@ defmodule Pleroma.Formatter do
     smart: true,
     unsafe_: true,
     autolink: true,
+    akkoma_autolinks: true,
   }
 
   defp linkify_opts do
