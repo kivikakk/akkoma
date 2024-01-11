@@ -467,7 +467,7 @@ defmodule Pleroma.Web.CommonAPITest do
 
       object = Object.normalize(activity, fetch: false)
 
-      assert object.data["content"] == "<p><b>2hu</b></p>"
+      assert object.data["content"] == "<p><b>2hu</b></p>alert(&#39;xss&#39;)\n"
 
       assert object.data["source"] == %{
                "mediaType" => "text/markdown",

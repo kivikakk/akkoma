@@ -37,7 +37,7 @@ defmodule Pleroma.Web.ActivityPub.Transmogrifier.VideoHandlingTest do
     assert object = Object.normalize(activity, fetch: false)
 
     assert object.data["content"] ==
-             "<p>Après avoir mené avec un certain succès la campagne « Dégooglisons Internet » en 2014, l’association Framasoft annonce fin 2019 arrêter progressivement un certain nombre de ses services alternatifs aux GAFAM. Pourquoi ?</p><p>Transcription par @aprilorg ici : <a href=\"https://www.april.org/deframasoftisons-internet-pierre-yves-gosset-framasoft\">https://www.april.org/deframasoftisons-internet-pierre-yves-gosset-framasoft</a></p>"
+             "<p>Après avoir mené avec un certain succès la campagne « Dégooglisons Internet » en 2014, l’association Framasoft annonce fin 2019 arrêter progressivement un certain nombre de ses services alternatifs aux GAFAM. Pourquoi ?</p>\n<p>Transcription par @aprilorg ici : <a href=\"https://www.april.org/deframasoftisons-internet-pierre-yves-gosset-framasoft\">https://www.april.org/deframasoftisons-internet-pierre-yves-gosset-framasoft</a></p>\n"
   end
 
   test "it remaps video URLs as attachments if necessary" do

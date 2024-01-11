@@ -99,14 +99,14 @@ defmodule Pleroma.Web.CommonAPI.UtilsTest do
 
     test "works for bare text/markdown" do
       text = "**hello world**"
-      expected = "<p><strong>hello world</strong></p>"
+      expected = "<p><strong>hello world</strong></p>\n"
 
       {output, [], []} = Utils.format_input(text, "text/markdown")
 
       assert output == expected
 
       text = "**hello world**\n\n*another paragraph*"
-      expected = "<p><strong>hello world</strong></p><p><em>another paragraph</em></p>"
+      expected = "<p><strong>hello world</strong></p>\n<p><em>another paragraph</em></p>\n"
 
       {output, [], []} = Utils.format_input(text, "text/markdown")
 
@@ -118,7 +118,7 @@ defmodule Pleroma.Web.CommonAPI.UtilsTest do
       by someone
       """
 
-      expected = "<blockquote><p>cool quote</p></blockquote><p>by someone</p>"
+      expected = "<blockquote>\n<p>cool quote</p>\n</blockquote>\n<p>by someone</p>\n"
 
       {output, [], []} = Utils.format_input(text, "text/markdown")
 
@@ -159,7 +159,7 @@ defmodule Pleroma.Web.CommonAPI.UtilsTest do
       {output, _, _} = Utils.format_input(text, "text/markdown")
 
       assert output ==
-               ~s(<p><strong>hello world</strong></p><p><em>another <span class="h-card"><a class="u-url mention" data-user="#{user.id}" href="http://foo.com/user__test" rel="ugc">@<span>user__test</span></a></span> and <span class="h-card"><a class="u-url mention" data-user="#{user.id}" href="http://foo.com/user__test" rel="ugc">@<span>user__test</span></a></span> <a href="http://google.com" rel="ugc">google.com</a> paragraph</em></p>)
+               ~s(<p><strong>hello world</strong></p>\n<p><em>another <span class="h-card"><a class="u-url mention" data-user="#{user.id}" href="http://foo.com/user__test" rel="ugc">@<span>user__test</span></a></span> and <span class="h-card"><a class="u-url mention" data-user="#{user.id}" href="http://foo.com/user__test" rel="ugc">@<span>user__test</span></a></span> <a href="http://google.com" rel="ugc">google.com</a> paragraph</em></p>\n)
     end
   end
 
@@ -167,17 +167,17 @@ defmodule Pleroma.Web.CommonAPI.UtilsTest do
     test "Paragraph" do
       code = ~s[Hello\n\nWorld!]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == "<p>Hello</p><p>World!</p>"
+      assert result == "<p>Hello</p>\n<p>World!</p>\n"
     end
 
     test "links" do
       code = "https://en.wikipedia.org/wiki/Animal_Crossing_(video_game)"
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<p><a href="#{code}">#{code}</a></p>]
+      assert result == ~s[<p><a href="#{code}">#{code}</a></p>\n]
 
       code = "https://github.com/pragdave/earmark/"
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<p><a href="#{code}">#{code}</a></p>]
+      assert result == ~s[<p><a href="#{code}">#{code}</a></p>\n]
     end
 
     test "link with local mention" do
@@ -185,7 +185,7 @@ defmodule Pleroma.Web.CommonAPI.UtilsTest do
 
       code = "https://example.com/@lain"
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<p><a href="#{code}">#{code}</a></p>]
+      assert result == ~s[<p><a href="#{code}">#{code}</a></p>\n]
     end
 
     test "local mentions" do
@@ -196,7 +196,7 @@ defmodule Pleroma.Web.CommonAPI.UtilsTest do
       {result, _, []} = Utils.format_input(code, "text/markdown")
 
       assert result ==
-               ~s[<p><span class="h-card"><a class="u-url mention" data-user="#{mario.id}" href="#{mario.ap_id}" rel="ugc">@<span>mario</span></a></span> <span class="h-card"><a class="u-url mention" data-user="#{luigi.id}" href="#{luigi.ap_id}" rel="ugc">@<span>luigi</span></a></span> yo what’s up?</p>]
+               ~s[<p><span class="h-card"><a class="u-url mention" data-user="#{mario.id}" href="#{mario.ap_id}" rel="ugc">@<span>mario</span></a></span> <span class="h-card"><a class="u-url mention" data-user="#{luigi.id}" href="#{luigi.ap_id}" rel="ugc">@<span>luigi</span></a></span> yo what’s up?</p>\n]
     end
 
     test "remote mentions" do
@@ -207,68 +207,68 @@ defmodule Pleroma.Web.CommonAPI.UtilsTest do
       {result, _, []} = Utils.format_input(code, "text/markdown")
 
       assert result ==
-               ~s[<p><span class="h-card"><a class="u-url mention" data-user="#{mario.id}" href="#{mario.ap_id}" rel="ugc">@<span>mario</span></a></span> <span class="h-card"><a class="u-url mention" data-user="#{luigi.id}" href="#{luigi.ap_id}" rel="ugc">@<span>luigi</span></a></span> yo what’s up?</p>]
+               ~s[<p><span class="h-card"><a class="u-url mention" data-user="#{mario.id}" href="#{mario.ap_id}" rel="ugc">@<span>mario</span></a></span> <span class="h-card"><a class="u-url mention" data-user="#{luigi.id}" href="#{luigi.ap_id}" rel="ugc">@<span>luigi</span></a></span> yo what’s up?</p>\n]
     end
 
     test "raw HTML" do
       code = ~s[<a href="http://example.org/">OwO</a><!-- what's this?-->]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<a href="http://example.org/">OwO</a>]
+      assert result == ~s[<p><a href="http://example.org/">OwO</a></p>\n]
     end
 
     test "rulers" do
       code = ~s[before\n\n-----\n\nafter]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == "<p>before</p><hr/><p>after</p>"
+      assert result == "<p>before</p>\n<hr/>\n<p>after</p>\n"
     end
 
     test "blockquote" do
       code = ~s[> whoms't are you quoting?]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == "<blockquote><p>whoms’t are you quoting?</p></blockquote>"
+      assert result == "<blockquote>\n<p>whoms’t are you quoting?</p>\n</blockquote>\n"
     end
 
     test "code" do
       code = ~s[`mix`]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<p><code class="inline">mix</code></p>]
+      assert result == ~s[<p><code>mix</code></p>\n]
 
       code = ~s[``mix``]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<p><code class="inline">mix</code></p>]
+      assert result == ~s[<p><code>mix</code></p>\n]
 
       code = ~s[```\nputs "Hello World"\n```]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<pre><code>puts &quot;Hello World&quot;</code></pre>]
+      assert result == ~s[<pre><code>puts &quot;Hello World&quot;\n</code></pre>\n]
 
       code = ~s[    <div>\n    </div>]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<pre><code>&lt;div&gt;\n&lt;/div&gt;</code></pre>]
+      assert result == ~s[<pre><code>&lt;div&gt;\n&lt;/div&gt;\n</code></pre>\n]
     end
 
     test "lists" do
       code = ~s[- one\n- two\n- three\n- four]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == "<ul><li>one</li><li>two</li><li>three</li><li>four</li></ul>"
+      assert result == "<ul>\n<li>one</li>\n<li>two</li>\n<li>three</li>\n<li>four</li>\n</ul>\n"
 
       code = ~s[1. one\n2. two\n3. three\n4. four\n]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == "<ol><li>one</li><li>two</li><li>three</li><li>four</li></ol>"
+      assert result == "<ol>\n<li>one</li>\n<li>two</li>\n<li>three</li>\n<li>four</li>\n</ol>\n"
     end
 
     test "delegated renderers" do
       code = ~s[*aaaa~*]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<p><em>aaaa~</em></p>]
+      assert result == ~s[<p><em>aaaa~</em></p>\n]
 
       code = ~s[**aaaa~**]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<p><strong>aaaa~</strong></p>]
+      assert result == ~s[<p><strong>aaaa~</strong></p>\n]
 
       # strikethrough
-      code = ~s[~~aaaa~~~]
+      code = ~s[~~aaaa~~]
       {result, [], []} = Utils.format_input(code, "text/markdown")
-      assert result == ~s[<p><del>aaaa</del>~</p>]
+      assert result == ~s[<p><del>aaaa</del></p>\n]
     end
   end
 

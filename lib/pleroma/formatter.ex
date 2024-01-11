@@ -17,6 +17,7 @@ defmodule Pleroma.Formatter do
     footnotes: true,
     smart: true,
     unsafe_: true,
+    autolink: true,
   }
 
   defp linkify_opts do
