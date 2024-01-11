@@ -17,7 +17,7 @@
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {inherit system;};
       inherit (pkgs) lib beamPackages writeText fetchFromGitLab fetchFromGitea fetchFromGitHub;
-      inherit (pkgs) cmake file libiconv;
+      inherit (pkgs) cmake file libiconv exiftool ffmpeg_5-headless imagemagick;
 
       ex-markdown = inputs.ex-markdown.packages.${system}.default;
     in rec {
@@ -208,6 +208,10 @@
           libiconv
           # For nix develop, where we don't use MARKDOWN_NATIVE_SKIP_COMPILATION.
           ex-markdown.rustToolchain
+          # Same as we pull in with the NixOS module.
+          exiftool
+          ffmpeg_5-headless
+          imagemagick
         ];
 
         buildInputs = [
