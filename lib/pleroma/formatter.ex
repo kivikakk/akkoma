@@ -126,13 +126,7 @@ defmodule Pleroma.Formatter do
         url: false,
         mention_handler: &Pleroma.Formatter.escape_mention_handler/4
       )
-
-    if options[:safe_mention] && Regex.named_captures(@safe_mention_regex, text) do
-      %{"mentions" => mentions, "rest" => rest} = Regex.named_captures(@safe_mention_regex, text)
-      Linkify.link(mentions, options) <> Linkify.link(rest, options)
-    else
-      Linkify.link(text, options)
-    end
+    Linkify.link(text, options)
   end
 
   def markdown_to_html(text, opts \\ %{}) do
