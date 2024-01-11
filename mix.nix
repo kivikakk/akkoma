@@ -700,6 +700,19 @@
       beamDeps = [];
     };
 
+    http_signatures = buildMix rec {
+      name = "http_signatures";
+      version = "0.1.1";
+
+      src = fetchHex {
+        pkg = "http_signatures";
+        version = "${version}";
+        sha256 = "cc3b8a007322cc7b624c0c15eec49ee58ac977254ff529a3c482f681465942a3";
+      };
+
+      beamDeps = [];
+    };
+
     httpoison = buildMix rec {
       name = "httpoison";
       version = "1.8.2";
@@ -802,6 +815,19 @@
       };
 
       beamDeps = [];
+    };
+
+    majic = buildMix rec {
+      name = "majic";
+      version = "1.0.0";
+
+      src = fetchHex {
+        pkg = "majic";
+        version = "${version}";
+        sha256 = "7905858f76650d49695f14ea55cd9aaaee0c6654fa391671d4cf305c275a0a9e";
+      };
+
+      beamDeps = [elixir_make mime nimble_pool plug];
     };
 
     makeup = buildMix rec {

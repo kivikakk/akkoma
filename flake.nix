@@ -190,6 +190,9 @@
                     "application/xml" => ["xml"],
                     "application/xrd+xml" => ["xrd+xml"]
                   }
+                  config :mime, :extensions, %{
+                    "activity+json" => "application/activity+json"
+                  }
                 '';
               in ''
                 mkdir config
