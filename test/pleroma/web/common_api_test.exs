@@ -341,7 +341,7 @@ defmodule Pleroma.Web.CommonAPITest do
     refute tridi.ap_id in activity.recipients
   end
 
-  test "with the safe_dm_mention option set, it does not mention people beyond the initial tags" do
+  test "with the safe_dm_mentions option set, it does not mention people beyond the initial tags" do
     har = insert(:user)
     jafnhar = insert(:user)
     tridi = insert(:user)
@@ -352,6 +352,24 @@ defmodule Pleroma.Web.CommonAPITest do
       CommonAPI.post(har, %{
         status: "@#{jafnhar.nickname} hey, i never want to see @#{tridi.nickname} again",
         visibility: "direct"
+      })
+
+    refute tridi.ap_id in activity.recipients
+    assert jafnhar.ap_id in activity.recipients
+  end
+
+  test "with the safe_dm_mentions option set, it does not mention people beyond the initial tags even when using markdown" do
+    har = insert(:user)
+    jafnhar = insert(:user)
+    tridi = insert(:user)
+
+    clear_config([:instance, :safe_dm_mentions], true)
+
+    {:ok, activity} =
+      CommonAPI.post(har, %{
+        status: "@#{jafnhar.nickname} hey, i never want to see @#{tridi.nickname} again",
+        visibility: "direct",
+        content_type: "text/markdown"
       })
 
     refute tridi.ap_id in activity.recipients
