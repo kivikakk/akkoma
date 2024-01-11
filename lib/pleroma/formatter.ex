@@ -6,6 +6,7 @@ defmodule Pleroma.Formatter do
   alias Pleroma.HTML
   alias Pleroma.User
 
+  @any_mention_regex ~r/(?:^|\W)@\S+/
   @safe_mention_regex ~r/^\s*(?<mentions>(?:<[^>]+>\s*)*(?:@\S+\s+){1,})(?<rest>.*)/s
   @link_regex ~r"((?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~%:/?#[\]@!\$&'\(\)\*\+,;=.]+)|[0-9a-z+\-\.]+:[0-9a-z$-_.+!*'(),]+"ui
   @markdown_characters_regex ~r/(`|\*|_|{|}|[|]|\(|\)|#|\+|-|\.|!)/
@@ -100,7 +101,7 @@ defmodule Pleroma.Formatter do
   def linkify(text, options \\ []) do
     options = linkify_opts() ++ options
 
-    if options[:safe_mention] do
+    if options[:safe_mention] && String.match?(text, @any_mention_regex) do
       %{"mentions" => mentions, "rest" => rest} = Regex.named_captures(@safe_mention_regex, text)
       acc = %{mentions: MapSet.new(), tags: MapSet.new()}
 
