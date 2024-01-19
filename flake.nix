@@ -234,7 +234,11 @@
         };
 
       nixosModules.default = {config, ...}: {
-        config.services.akkoma.package = self.packages.${system}.default;
+        config.nixpkgs.overlays = [
+          (final: prev: {
+            akkoma = self.packages.${system}.default;
+          })
+        ];
       };
     });
 }
