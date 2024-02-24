@@ -187,6 +187,20 @@ defmodule Mix.Tasks.Pleroma.User do
     |> Stream.run()
   end
 
+  def run(["activate_all_from_instance", instance]) do
+    start_pleroma()
+
+    Pleroma.User.Query.build(%{nickname: "@#{instance}"})
+    |> Pleroma.Repo.chunk_stream(500, :batches)
+    |> Stream.each(fn users ->
+      users
+      |> Enum.each(fn user ->
+        run(["activate", user.nickname])
+      end)
+    end)
+    |> Stream.run()
+  end
+
   def run(["set", nickname | rest]) do
     start_pleroma()
 
